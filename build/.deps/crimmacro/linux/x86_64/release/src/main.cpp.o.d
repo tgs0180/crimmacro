@@ -1,4 +1,6 @@
 {
+    depfiles = "main.o: src/main.cpp include/hotkeys.hpp\
+",
     values = {
         "/usr/bin/g++",
         {
@@ -7,6 +9,7 @@
             "-fvisibility-inlines-hidden",
             "-O3",
             "-std=c++17",
+            "-Iinclude",
             "-isystem",
             "/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de/include",
             "-isystem",
@@ -19,8 +22,6 @@
         }
     },
     depfiles_format = "gcc",
-    depfiles = "main.o: src/main.cpp\
-",
     files = {
         "src/main.cpp"
     }

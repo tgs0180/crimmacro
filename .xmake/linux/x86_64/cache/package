@@ -1,37 +1,33 @@
 {
     imgui = {
-        __requirestr = "imgui",
         __enabled = true,
         linkdirs = "/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de/lib",
+        __requirestr = "imgui",
+        license = "MIT",
+        installdir = "/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de",
+        libfiles = {
+            "/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de/lib/libimgui.a",
+            "/usr/lib/libSDL3.so",
+            "/usr/lib/libSDL3_test.a"
+        },
         sysincludedirs = {
             "/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de/include",
             "/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de/include/imgui",
             "/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de/include/backends",
             "/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de/include/misc/cpp"
         },
-        links = {
-            "imgui",
-            "SDL3"
-        },
-        installdir = "/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de",
-        license = "MIT",
+        static = true,
         __requireconfs = {
             configs = {
                 sdl3 = true,
                 sdl3_renderer = true
             }
         },
-        version = "v1.92.9+b-docking",
+        links = {
+            "imgui",
+            "SDL3"
+        },
         envs = {
-            LD_LIBRARY_PATH = {
-                "/home/sjaak/.xmake/packages/l/libxau/1.0.12/f28a3a7249e64bfeafc481e65ce195a9/lib",
-                "/home/sjaak/.xmake/packages/l/libxdmcp/1.1.5/fac034d258af4aada2c864884ac5f660/lib",
-                "/home/sjaak/.xmake/packages/l/libxcb/1.17.0/8212376093344ea7a7a61a715b1bcdd5/lib",
-                "/home/sjaak/.xmake/packages/l/libx11/1.8.13/fa5de29573fd426583b062bb45cc2a89/lib",
-                "/home/sjaak/.xmake/packages/l/libxfixes/6.0.1/32cbba7be85a4185b00b52ca82de8150/lib",
-                "/home/sjaak/.xmake/packages/l/libxrender/0.9.12/504f602166aa49fcb7386ef0f2d67c9b/lib",
-                "/home/sjaak/.xmake/packages/l/libxext/1.3.7/f2028efa1de84bdb8bcf174232090114/lib"
-            },
             PATH = {
                 "/home/sjaak/.xmake/packages/n/ninja/v1.13.2/0a9451759a4647b5923438b464085dd6/bin",
                 "/home/sjaak/.xmake/packages/c/cmake/4.3.4/478c5cdb1d4b47ff91b42b2ceeb382a8/bin",
@@ -50,13 +46,17 @@
             },
             PYTHONPATH = {
                 "/home/sjaak/.xmake/packages/p/python/3.14.3/5b29e409d339499392171d61390dfc38/lib/python3.14/site-packages"
+            },
+            LD_LIBRARY_PATH = {
+                "/home/sjaak/.xmake/packages/l/libxau/1.0.12/f28a3a7249e64bfeafc481e65ce195a9/lib",
+                "/home/sjaak/.xmake/packages/l/libxdmcp/1.1.5/fac034d258af4aada2c864884ac5f660/lib",
+                "/home/sjaak/.xmake/packages/l/libxcb/1.17.0/8212376093344ea7a7a61a715b1bcdd5/lib",
+                "/home/sjaak/.xmake/packages/l/libx11/1.8.13/fa5de29573fd426583b062bb45cc2a89/lib",
+                "/home/sjaak/.xmake/packages/l/libxfixes/6.0.1/32cbba7be85a4185b00b52ca82de8150/lib",
+                "/home/sjaak/.xmake/packages/l/libxrender/0.9.12/504f602166aa49fcb7386ef0f2d67c9b/lib",
+                "/home/sjaak/.xmake/packages/l/libxext/1.3.7/f2028efa1de84bdb8bcf174232090114/lib"
             }
         },
-        static = true,
-        libfiles = {
-            "/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de/lib/libimgui.a",
-            "/usr/lib/libSDL3.so",
-            "/usr/lib/libSDL3_test.a"
-        }
+        version = "v1.92.9+b-docking"
     }
 }
