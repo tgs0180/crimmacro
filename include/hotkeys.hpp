@@ -1,9 +1,8 @@
 #pragma once
-#include <fcntl.h>
-#include <unistd.h>
 #include <linux/input.h>
-#include <atomic>
+
 #include <functional>
-#include <iostream>
+
+enum class State{Paused, Working, Quitting};
 
 void listenHotkeys(std::function<void(int)> onKeyPress);

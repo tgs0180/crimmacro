@@ -7,10 +7,7 @@
         "/usr/bin/g++",
         {
             "-m64",
-            "-L/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de/lib",
-            "-s",
-            "-limgui",
-            "-lSDL3"
+            "-s"
         }
     }
 }

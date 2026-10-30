@@ -1,4 +1,8 @@
 #include "hotkeys.hpp"
+#include <iostream>
+#include <fcntl.h>
+#include <unistd.h>
+#include <atomic>
 
 void listenHotkeys(std::function<void(int)> onKeyPress) {
     int fd = open("/dev/input/event1", O_RDONLY);
@@ -15,7 +19,9 @@ void listenHotkeys(std::function<void(int)> onKeyPress) {
         else if (n == 0) {std::cerr << "N failed"<< "\n"; return;}
         else if (n != sizeof(ev)) {std::cerr << "N failed"<< "\n"; return;}
         
-        onKeyPress(ev.code);
+        if (ev.value == 1&&ev.type == EV_KEY) {
+            onKeyPress(ev.code);
+        }
     }
     
     
