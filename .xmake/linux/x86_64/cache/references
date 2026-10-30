@@ -1,0 +1,14 @@
+{
+    packages = {
+        "/home/sjaak/.xmake/packages/n/ninja/v1.13.2/0a9451759a4647b5923438b464085dd6",
+        "/home/sjaak/.xmake/packages/c/cmake/4.3.4/478c5cdb1d4b47ff91b42b2ceeb382a8",
+        "/home/sjaak/.xmake/packages/e/egl-headers/2023.12.16/cd777b21b8c84268bf5e21c2813eae03",
+        "/home/sjaak/.xmake/packages/o/opengl-headers/2024.01.04/59ed79d7030a4b298d033d457b08e5ff",
+        "/home/sjaak/.xmake/packages/u/util-macros/1.20.0/21ebacb0450b4b16b06b586ecc142d3f",
+        "/home/sjaak/.xmake/packages/p/python/3.14.3/5b29e409d339499392171d61390dfc38",
+        "/home/sjaak/.xmake/packages/l/libpthread-stubs/0.5/e6c09af522624eb1ae863fe21c4aa62c",
+        "/home/sjaak/.xmake/packages/x/xtrans/1.6.0/588d85a9c99148b8ae87dee11b39ab40",
+        "/home/sjaak/.xmake/packages/m/meson/1.12.1/4422ec0eefae43d68b0abd8c3a52a56f",
+        "/home/sjaak/.xmake/packages/i/imgui/v1.92.9+b-docking/7de164fddbf3404fb7ed0779905107de"
+    }
+}
