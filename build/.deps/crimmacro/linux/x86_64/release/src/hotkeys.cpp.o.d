@@ -1,10 +1,10 @@
 {
-    depfiles_format = "gcc",
-    depfiles = "hotkeys.o: src/hotkeys.cpp include/hotkeys.hpp include/fd.hpp\
-",
     files = {
         "src/hotkeys.cpp"
     },
+    depfiles = "hotkeys.o: src/hotkeys.cpp include/hotkeys.hpp include/fd.hpp\
+",
+    depfiles_format = "gcc",
     values = {
         "/usr/bin/g++",
         {

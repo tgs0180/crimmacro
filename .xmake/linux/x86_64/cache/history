@@ -1,12 +1,5 @@
 {
     cmdlines = {
-        "xmake check",
-        "xmake l /home/sjaak/.vscode/extensions/tboox.xmake-vscode-2.6.0/assets/config.lua",
-        "xmake l /home/sjaak/.vscode/extensions/tboox.xmake-vscode-2.6.0/assets/update_intellisense.lua .vscode clangd",
-        "xmake l /home/sjaak/.vscode/extensions/tboox.xmake-vscode-2.6.0/assets/explorer.lua",
-        "xmake check",
-        "xmake l /home/sjaak/.vscode/extensions/tboox.xmake-vscode-2.6.0/assets/config.lua",
-        "xmake l /home/sjaak/.vscode/extensions/tboox.xmake-vscode-2.6.0/assets/update_intellisense.lua .vscode clangd",
         "xmake l /home/sjaak/.vscode/extensions/tboox.xmake-vscode-2.6.0/assets/explorer.lua",
         "xmake check",
         "xmake l /home/sjaak/.vscode/extensions/tboox.xmake-vscode-2.6.0/assets/config.lua",
@@ -64,6 +57,13 @@
         "xmake run",
         "xmake -r -y",
         "xmake l /home/sjaak/.vscode/extensions/tboox.xmake-vscode-2.6.0/assets/explorer.lua",
-        "xmake l /home/sjaak/.vscode/extensions/tboox.xmake-vscode-2.6.0/assets/explorer.lua"
+        "xmake l /home/sjaak/.vscode/extensions/tboox.xmake-vscode-2.6.0/assets/explorer.lua",
+        "xmake -y",
+        "xmake ",
+        "xmake ",
+        "xmake run",
+        "xmake run",
+        "xmake -r -y",
+        "xmake run"
     }
 }

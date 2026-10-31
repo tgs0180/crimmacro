@@ -8,12 +8,15 @@
 #include <chrono>
 #include <atomic>
 #include "hyprland.hpp"
+#include "input.hpp"
 
 using namespace std::chrono_literals; // Enables the 'ms' suffix
 
 enum class State{Paused, Working, Quitting};
 
 int main() {
+    VirtualInput input;
+    if (!input.valid()) std::cout << "input isnt vaid" << "\n";
     std::atomic<State> state{State::Paused};
     std::thread thread(listenHotkeys, [&state](int code) {
         if (code == KEY_F1) {state = State::Working; return true;}
