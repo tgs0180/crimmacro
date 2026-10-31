@@ -16,8 +16,6 @@ enum class State{Paused, Working, Quitting};
 
 int main() {
     VirtualInput input;
-    sleep(3);
-    input.tap(KEY_A);
     if (!input.valid()) std::cout << "input isnt vaid" << "\n";
     std::atomic<State> state{State::Paused};
     std::thread thread(listenHotkeys, [&state](int code) {

@@ -2,9 +2,6 @@
     files = {
         "src/hyprland.cpp"
     },
-    depfiles = "hyprland.o: src/hyprland.cpp include/hyprland.hpp include/fd.hpp\
-",
-    depfiles_format = "gcc",
     values = {
         "/usr/bin/g++",
         {
@@ -18,5 +15,8 @@
             "/home/sjaak/.xmake/packages/n/nlohmann_json/v3.12.0/b36e201b1206419d94ef523b409412cf/include",
             "-DNDEBUG"
         }
-    }
+    },
+    depfiles_format = "gcc",
+    depfiles = "hyprland.o: src/hyprland.cpp include/hyprland.hpp include/fd.hpp\
+"
 }

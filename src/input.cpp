@@ -5,11 +5,17 @@
 #include <cstring>
 #include <fcntl.h>
 #include <cstdio>
+#include <chrono>
+#include <thread>
+
+using namespace std::chrono_literals; 
 
 VirtualInput::VirtualInput() : fd_(open("/dev/uinput", O_WRONLY | O_NONBLOCK)) {
     if (!valid()) return;
     ioctl(fd_.get(), UI_SET_EVBIT, EV_KEY);
-    ioctl(fd_.get(), UI_SET_KEYBIT, KEY_A);
+    for (int key: keys) {
+        ioctl(fd_.get(), UI_SET_KEYBIT, key);
+    }
     uinput_setup setup{};
     setup.id.bustype = BUS_USB;
     setup.id.vendor = 0x1234;
@@ -39,6 +45,16 @@ void VirtualInput::emit(int type, int code, int value) {
 void VirtualInput::tap(int key) {
     emit(EV_KEY, key, 1);
     emit(EV_SYN, SYN_REPORT, 0);
+    std::this_thread::sleep_for(30ms);
+    emit(EV_KEY, key, 0);
+    emit(EV_SYN, SYN_REPORT, 0);
+}
+
+void VirtualInput::hold(int key, float seconds) {
+    emit(EV_KEY, key, 1);
+    emit(EV_SYN, SYN_REPORT, 0);
+    int time = static_cast<int>(seconds * 1000);
+    std::this_thread::sleep_for(std::chrono::milliseconds(time));
     emit(EV_KEY, key, 0);
     emit(EV_SYN, SYN_REPORT, 0);
 }
