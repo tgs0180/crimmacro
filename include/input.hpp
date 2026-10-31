@@ -3,6 +3,7 @@
 #include <vector>
 #include <unistd.h>
 #include <linux/uinput.h>
+#include <atomic>
 
 class VirtualInput {
     public:
@@ -14,9 +15,11 @@ class VirtualInput {
         void moveTo(int x, int y);
         void click();
         void clickAt(int x, int y);
+        std::atomic<bool> shouldStop{false};
+
 
     private:
         Fd fd_;
         void emit(int type, int code, int value);
-        std::vector<int> keys{KEY_W, KEY_A, KEY_S, KEY_D, KEY_E, BTN_LEFT, BTN_RIGHT};
+        std::vector<int> keys{KEY_W, KEY_A, KEY_S, KEY_D, KEY_E, BTN_LEFT, BTN_RIGHT, KEY_P};
 };

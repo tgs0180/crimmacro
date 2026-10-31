@@ -1,4 +1,7 @@
 {
+    depfiles = "main.o: src/main.cpp include/hotkeys.hpp include/hyprland.hpp  include/input.hpp include/fd.hpp\
+",
+    depfiles_format = "gcc",
     files = {
         "src/main.cpp"
     },
@@ -15,8 +18,5 @@
             "/home/sjaak/.xmake/packages/n/nlohmann_json/v3.12.0/b36e201b1206419d94ef523b409412cf/include",
             "-DNDEBUG"
         }
-    },
-    depfiles_format = "gcc",
-    depfiles = "main.o: src/main.cpp include/hotkeys.hpp include/hyprland.hpp  include/input.hpp include/fd.hpp\
-"
+    }
 }

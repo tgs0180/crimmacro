@@ -1,7 +1,4 @@
 {
-    files = {
-        "src/hotkeys.cpp"
-    },
     values = {
         "/usr/bin/g++",
         {
@@ -18,5 +15,8 @@
     },
     depfiles_format = "gcc",
     depfiles = "hotkeys.o: src/hotkeys.cpp include/hotkeys.hpp include/fd.hpp\
-"
+",
+    files = {
+        "src/hotkeys.cpp"
+    }
 }

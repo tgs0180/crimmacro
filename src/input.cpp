@@ -7,6 +7,8 @@
 #include <cstdio>
 #include <chrono>
 #include <thread>
+#include <cmath>
+#include <utility>
 
 using namespace std::chrono_literals; 
 
@@ -16,15 +18,15 @@ VirtualInput::VirtualInput() : fd_(open("/dev/uinput", O_WRONLY | O_NONBLOCK)) {
     ioctl(fd_.get(), UI_SET_EVBIT, EV_ABS);
     ioctl(fd_.get(), UI_SET_ABSBIT, ABS_X);
     ioctl(fd_.get(), UI_SET_ABSBIT, ABS_Y);
-    uinput_abs_setup setupX;
+    uinput_abs_setup setupX{};
     setupX.code = ABS_X;
     setupX.absinfo.minimum = 0;
-    setupX.absinfo.maximum = 1920;
+    setupX.absinfo.maximum = 1919;
 
-    uinput_abs_setup setupY;
+    uinput_abs_setup setupY{};
     setupY.code = ABS_Y;
     setupY.absinfo.minimum = 0;
-    setupY.absinfo.maximum = 1080;
+    setupY.absinfo.maximum = 1079;
 
     ioctl(fd_.get(), UI_ABS_SETUP, &setupX);
     ioctl(fd_.get(), UI_ABS_SETUP, &setupY);
@@ -68,12 +70,17 @@ void VirtualInput::tap(int key) {
     emit(EV_KEY, key, 0);
     emit(EV_SYN, SYN_REPORT, 0);
 }
-
+// Accurate to ~1ms: sleeps towards a fixed end time, so the small oversleeps don't add up
 void VirtualInput::hold(int key, float seconds) {
     emit(EV_KEY, key, 1);
     emit(EV_SYN, SYN_REPORT, 0);
-    int time = static_cast<int>(seconds * 1000);
-    std::this_thread::sleep_for(std::chrono::milliseconds(time));
+    auto end = std::chrono::steady_clock::now() + std::chrono::milliseconds(std::lround(seconds * 1000));
+    while (!shouldStop) {
+        auto now = std::chrono::steady_clock::now();
+        if (now >= end) break;
+        // wake up at least every 10ms to check shouldStop, but never sleep past the end
+        std::this_thread::sleep_until(std::min(end, now + 10ms));
+    }
     emit(EV_KEY, key, 0);
     emit(EV_SYN, SYN_REPORT, 0);
 }
@@ -93,3 +100,4 @@ void VirtualInput::clickAt(int x, int y) {
     std::this_thread::sleep_for(30ms);
     click();
 }
+
