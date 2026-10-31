@@ -1,7 +1,5 @@
 {
     cmdlines = {
-        "xmake -v -y",
-        "xmake ",
         "xmake run",
         "xmake run",
         "xmake run",
@@ -64,6 +62,8 @@
         "xmake -y",
         "xmake ",
         "xmake ",
+        "xmake run",
+        "xmake run",
         "xmake run"
     }
 }

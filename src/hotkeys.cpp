@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <atomic>
 
-void listenHotkeys(std::function<void(int)> onKeyPress) {
+void listenHotkeys(std::function<bool(int)> onKeyPress) {
     int fd = open("/dev/input/event1", O_RDONLY);
     if (fd == -1) {
         perror("open");
@@ -20,8 +20,10 @@ void listenHotkeys(std::function<void(int)> onKeyPress) {
         else if (n != sizeof(ev)) {std::cerr << "N failed"<< "\n"; return;}
         
         if (ev.value == 1&&ev.type == EV_KEY) {
-            onKeyPress(ev.code);
+            if (!onKeyPress(ev.code)) break;
         }
+
+        
     }
     
     
