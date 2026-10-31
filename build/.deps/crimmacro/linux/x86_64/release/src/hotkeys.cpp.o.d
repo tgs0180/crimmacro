@@ -11,10 +11,10 @@
             "-DNDEBUG"
         }
     },
-    files = {
-        "src/hotkeys.cpp"
-    },
     depfiles_format = "gcc",
     depfiles = "hotkeys.o: src/hotkeys.cpp include/hotkeys.hpp\
-"
+",
+    files = {
+        "src/hotkeys.cpp"
+    }
 }

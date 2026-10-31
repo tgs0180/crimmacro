@@ -2,8 +2,6 @@
     cmdlines = {
         "xmake run",
         "xmake run",
-        "xmake run",
-        "xmake run",
         "xmake -y",
         "xmake run",
         "xmake l /home/sjaak/.vscode/extensions/tboox.xmake-vscode-2.6.0/assets/explorer.lua",
@@ -64,6 +62,8 @@
         "xmake ",
         "xmake run",
         "xmake run",
+        "xmake run",
+        "xmake -y",
         "xmake run"
     }
 }

@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <atomic>
+#include <linux/input.h>
 
 void listenHotkeys(std::function<bool(int)> onKeyPress) {
     int fd = open("/dev/input/event1", O_RDONLY);
