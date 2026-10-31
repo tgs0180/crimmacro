@@ -1,0 +1,9 @@
+{
+    errdata = "src/hyprland.cpp: In function ‘std::string hyprcommand(std::string)’:\
+src/hyprland.cpp:20:1: warning: control reaches end of non-void function [-Wreturn-type]\
+   20 | }\
+      | ^\
+At global scope:\
+cc1plus: note: unrecognized command-line option ‘-Wno-gnu-line-marker’ may have been intended to silence earlier diagnostics\
+"
+}

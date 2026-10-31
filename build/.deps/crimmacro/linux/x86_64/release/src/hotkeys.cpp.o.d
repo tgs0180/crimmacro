@@ -1,4 +1,5 @@
 {
+    depfiles_format = "gcc",
     values = {
         "/usr/bin/g++",
         {
@@ -11,10 +12,9 @@
             "-DNDEBUG"
         }
     },
-    depfiles_format = "gcc",
-    depfiles = "hotkeys.o: src/hotkeys.cpp include/hotkeys.hpp\
-",
     files = {
         "src/hotkeys.cpp"
-    }
+    },
+    depfiles = "hotkeys.o: src/hotkeys.cpp include/hotkeys.hpp include/fd.hpp\
+"
 }
