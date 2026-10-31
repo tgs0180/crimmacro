@@ -12,10 +12,29 @@ using namespace std::chrono_literals;
 
 VirtualInput::VirtualInput() : fd_(open("/dev/uinput", O_WRONLY | O_NONBLOCK)) {
     if (!valid()) return;
+    
+    ioctl(fd_.get(), UI_SET_EVBIT, EV_ABS);
+    ioctl(fd_.get(), UI_SET_ABSBIT, ABS_X);
+    ioctl(fd_.get(), UI_SET_ABSBIT, ABS_Y);
+    uinput_abs_setup setupX;
+    setupX.code = ABS_X;
+    setupX.absinfo.minimum = 0;
+    setupX.absinfo.maximum = 1920;
+
+    uinput_abs_setup setupY;
+    setupY.code = ABS_Y;
+    setupY.absinfo.minimum = 0;
+    setupY.absinfo.maximum = 1080;
+
+    ioctl(fd_.get(), UI_ABS_SETUP, &setupX);
+    ioctl(fd_.get(), UI_ABS_SETUP, &setupY);
+
+
     ioctl(fd_.get(), UI_SET_EVBIT, EV_KEY);
     for (int key: keys) {
         ioctl(fd_.get(), UI_SET_KEYBIT, key);
     }
+
     uinput_setup setup{};
     setup.id.bustype = BUS_USB;
     setup.id.vendor = 0x1234;
@@ -57,4 +76,20 @@ void VirtualInput::hold(int key, float seconds) {
     std::this_thread::sleep_for(std::chrono::milliseconds(time));
     emit(EV_KEY, key, 0);
     emit(EV_SYN, SYN_REPORT, 0);
+}
+
+void VirtualInput::moveTo(int x, int y) {
+    emit(EV_ABS, ABS_X, x);
+    emit(EV_ABS, ABS_Y, y);
+    emit(EV_SYN, SYN_REPORT, 0);
+}
+
+void VirtualInput::click() {
+    tap(BTN_LEFT);
+}
+
+void VirtualInput::clickAt(int x, int y) {
+    moveTo(x, y);
+    std::this_thread::sleep_for(30ms);
+    click();
 }

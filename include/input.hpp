@@ -11,9 +11,12 @@ class VirtualInput {
         bool valid() const;
         void tap(int key);
         void hold(int key, float seconds);
+        void moveTo(int x, int y);
+        void click();
+        void clickAt(int x, int y);
 
     private:
         Fd fd_;
         void emit(int type, int code, int value);
-        std::vector<int> keys{KEY_W, KEY_A, KEY_S, KEY_D, KEY_E};
+        std::vector<int> keys{KEY_W, KEY_A, KEY_S, KEY_D, KEY_E, BTN_LEFT, BTN_RIGHT};
 };
