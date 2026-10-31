@@ -27,3 +27,18 @@ bool VirtualInput::valid() const {
 VirtualInput::~VirtualInput() {
     ioctl(fd_.get(), UI_DEV_DESTROY);
 }
+
+void VirtualInput::emit(int type, int code, int value) {
+    input_event ev{};
+    ev.type = type;
+    ev.code = code;
+    ev.value = value;
+    write(fd_.get(), &ev, sizeof ev);
+}
+
+void VirtualInput::tap(int key) {
+    emit(EV_KEY, key, 1);
+    emit(EV_SYN, SYN_REPORT, 0);
+    emit(EV_KEY, key, 0);
+    emit(EV_SYN, SYN_REPORT, 0);
+}

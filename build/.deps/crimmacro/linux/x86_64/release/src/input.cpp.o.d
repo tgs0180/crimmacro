@@ -1,9 +1,9 @@
 {
+    depfiles = "input.o: src/input.cpp include/input.hpp include/fd.hpp\
+",
     files = {
         "src/input.cpp"
     },
-    depfiles = "input.o: src/input.cpp include/input.hpp include/fd.hpp\
-",
     depfiles_format = "gcc",
     values = {
         "/usr/bin/g++",
