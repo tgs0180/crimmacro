@@ -43,10 +43,28 @@ int main() {
     if (!focusSober()) std::cout << "failed to focus sober" << "\n";
 
     std::optional<fract> autohatchPos;
+    bool autohatchClicked{false};
+    std::chrono::steady_clock::time_point lastAfk = std::chrono::steady_clock::now() - 6min;
     while (state != State::Quitting) {
         if (state == State::Working) {
             focusSober();
             std::cout << "working..." << "\n";
+            if (!autohatchPos.has_value()) {
+                std::cout << "Press F5 to save button position" << "\n";
+            }
+            else {
+                auto win = parser();
+                if (win) {
+                    auto clickposx = autohatchPos->x * win->width + win->x;
+                    auto clickposy = autohatchPos->y * win->height + win->y;
+                    if (!autohatchClicked) {input.clickAt(clickposx, clickposy); autohatchClicked = true;}
+                }
+            }
+
+            if (std::chrono::steady_clock::now() - lastAfk >= 5min) {
+                input.tap(KEY_P);
+                lastAfk = std::chrono::steady_clock::now();
+            }
         }
 
         if (pickRequested.exchange(false)) {

@@ -2,7 +2,6 @@
     files = {
         "src/hyprland.cpp"
     },
-    depfiles_format = "gcc",
     values = {
         "/usr/bin/g++",
         {
@@ -17,6 +16,7 @@
             "-DNDEBUG"
         }
     },
+    depfiles_format = "gcc",
     depfiles = "hyprland.o: src/hyprland.cpp include/hyprland.hpp include/fd.hpp\
 "
 }

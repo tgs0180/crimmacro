@@ -2,7 +2,6 @@
     files = {
         "src/main.cpp"
     },
-    depfiles_format = "gcc",
     values = {
         "/usr/bin/g++",
         {
@@ -17,6 +16,7 @@
             "-DNDEBUG"
         }
     },
+    depfiles_format = "gcc",
     depfiles = "main.o: src/main.cpp include/hotkeys.hpp include/hyprland.hpp  include/input.hpp include/fd.hpp\
 "
 }
