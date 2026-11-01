@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <nlohmann/json.hpp>
+#include <utility>
 
 std::string hyprcommand(std::string command) {
     const char* runtime = std::getenv("XDG_RUNTIME_DIR");
@@ -57,4 +58,14 @@ bool focusSober() {
     std::string reply = hyprcommand(R"(dispatch hl.dsp.focus({ window = "class:org.vinegarhq.Sober" }))");
     if (reply == "ok") return true;
     else return false;
+}
+
+std::optional<cursorParse> cursorPos() {
+    cursorParse cursor;
+    auto com = hyprcommand("j/cursorpos");
+    if (com == "") return std::nullopt;
+    auto j = nlohmann::json::parse(com);
+    cursor.x = j["x"];
+    cursor.y = j["y"];
+    return cursor;
 }

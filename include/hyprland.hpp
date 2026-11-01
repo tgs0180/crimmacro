@@ -14,3 +14,10 @@ struct parseresult {
 std::optional<parseresult> parser();
 
 bool focusSober();
+
+struct cursorParse {
+    int x{};
+    int y{};
+};
+
+std::optional<cursorParse> cursorPos();
