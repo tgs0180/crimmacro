@@ -10,6 +10,9 @@
 #include <atomic>
 #include "hyprland.hpp"
 #include "input.hpp"
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include "eyes.hpp"
 
 using namespace std::chrono_literals; // Enables the 'ms' suffix
 
@@ -27,11 +30,13 @@ int main() {
 
     std::atomic<State> state{State::Paused};
     std::atomic<bool> pickRequested{false};
-    std::thread thread(listenHotkeys, [&state, &input, &pickRequested](int code) {
+    std::atomic<bool> screenshotRequested{false};
+    std::thread thread(listenHotkeys, [&state, &input, &pickRequested, &screenshotRequested](int code) {
         if (code == KEY_F1) {state = State::Working; input.shouldStop = false; return true;}
         else if (code == KEY_F2) {state = State::Paused; input.shouldStop = true; return true;}
         else if (code == KEY_F3) {state = State::Quitting; input.shouldStop = true; return false;}
         else if (code == KEY_F5) {pickRequested = true; return true;}
+        else if (code == KEY_F6) {screenshotRequested = true; return true;}
         else return true;});
 
 
@@ -75,6 +80,14 @@ int main() {
                 float relY = (cursor->y - win->y) / float(win->height);
                 std::cout << relX << "\n" << relY << "\n";
                 autohatchPos = fract{relX, relY};
+            }
+        }
+
+        if (screenshotRequested.exchange(false)) {
+            cv::Mat img = look();
+            if (!img.empty()) {
+                cv::imwrite("debug.png", img);
+                std::cout << "TOOK SCREENSHOT" << "\n";
             }
         }
 

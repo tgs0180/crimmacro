@@ -13,6 +13,8 @@ target("crimmacro")
     add_files("src/*.cpp")
     add_includedirs("include")
     add_packages("nlohmann_json")
+    add_includedirs("/usr/include/opencv5")
+    add_links("opencv_core", "opencv_imgcodecs", "opencv_imgproc")
 
 
 

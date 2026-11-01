@@ -1,5 +1,6 @@
 {
     values = {
+        "src/eyes.cpp",
         "src/hotkeys.cpp",
         "src/hyprland.cpp",
         "src/input.cpp",
