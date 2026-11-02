@@ -13,7 +13,8 @@
             "-s",
             "-lopencv_core",
             "-lopencv_imgcodecs",
-            "-lopencv_imgproc"
+            "-lopencv_imgproc",
+            "-lopencv_geometry"
         }
     }
 }

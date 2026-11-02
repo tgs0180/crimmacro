@@ -13,6 +13,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include "eyes.hpp"
+#include "opencv2/core/types.hpp"
+#include <opencv2/imgproc.hpp>
 
 using namespace std::chrono_literals; // Enables the 'ms' suffix
 
@@ -24,6 +26,9 @@ struct fract {
 };
 
 int main() {
+    cv::Mat turnOn = cv::imread("templates/turn_on.png", cv::IMREAD_COLOR);
+    cv::Mat turnOff = cv::imread("templates/turn_off.png", cv::IMREAD_COLOR);
+    
     VirtualInput input;
 
     if (!input.valid()) std::cout << "input isnt vaid" << "\n";
@@ -36,7 +41,10 @@ int main() {
         else if (code == KEY_F2) {state = State::Paused; input.shouldStop = true; return true;}
         else if (code == KEY_F3) {state = State::Quitting; input.shouldStop = true; return false;}
         else if (code == KEY_F5) {pickRequested = true; return true;}
-        else if (code == KEY_F6) {screenshotRequested = true; return true;}
+        else if (code == KEY_F6) {
+            screenshotRequested = true;
+            return true;  
+        }
         else return true;});
 
 
@@ -88,6 +96,20 @@ int main() {
             if (!img.empty()) {
                 cv::imwrite("debug.png", img);
                 std::cout << "TOOK SCREENSHOT" << "\n";
+            }
+            if (!turnOn.empty() || !turnOff.empty()) {
+                auto r = findButton(img, cv::Scalar(0,0,200), cv::Scalar(90,90,255));
+                auto rr = findButton(img, cv::Scalar(30, 200, 30), cv::Scalar(90, 255, 90));
+                if (r) {
+                    std::cout << "turn off detected" << "\n";
+                    cv::rectangle(img, *r, cv::Scalar(0,255,0), 2);
+                    cv::imwrite("debug.png", img);
+                }
+                if (rr) {
+                    std::cout << "turn on detected" << "\n";
+                    cv::rectangle(img, *rr, cv::Scalar(0, 0, 255), 2);
+                    cv::imwrite("debug.png", img);
+                }
             }
         }
 

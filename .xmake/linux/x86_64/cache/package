@@ -1,10 +1,10 @@
 {
     nlohmann_json = {
-        sysincludedirs = "/home/sjaak/.xmake/packages/n/nlohmann_json/v3.12.0/b36e201b1206419d94ef523b409412cf/include",
-        __enabled = true,
+        license = "MIT",
         installdir = "/home/sjaak/.xmake/packages/n/nlohmann_json/v3.12.0/b36e201b1206419d94ef523b409412cf",
         __requirestr = "nlohmann_json",
+        sysincludedirs = "/home/sjaak/.xmake/packages/n/nlohmann_json/v3.12.0/b36e201b1206419d94ef523b409412cf/include",
         version = "v3.12.0",
-        license = "MIT"
+        __enabled = true
     }
 }
