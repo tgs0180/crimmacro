@@ -31,6 +31,9 @@ VirtualInput::VirtualInput() : fd_(open("/dev/uinput", O_WRONLY | O_NONBLOCK)) {
     ioctl(fd_.get(), UI_ABS_SETUP, &setupX);
     ioctl(fd_.get(), UI_ABS_SETUP, &setupY);
 
+    ioctl(fd_.get(), UI_SET_EVBIT, EV_REL);
+    ioctl(fd_.get(), UI_SET_RELBIT, REL_WHEEL);
+
 
     ioctl(fd_.get(), UI_SET_EVBIT, EV_KEY);
     for (int key: keys) {
@@ -99,5 +102,10 @@ void VirtualInput::clickAt(int x, int y) {
     moveTo(x, y);
     std::this_thread::sleep_for(30ms);
     click();
+}
+
+void VirtualInput::scroll(int amount) {
+    emit(EV_REL, REL_WHEEL, amount);
+    emit(EV_SYN, SYN_REPORT, 0);
 }
 

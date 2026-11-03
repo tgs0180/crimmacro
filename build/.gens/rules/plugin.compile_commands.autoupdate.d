@@ -8,6 +8,7 @@
         "src/hotkeys.cpp",
         "src/hyprland.cpp",
         "src/input.cpp",
-        "src/main.cpp"
+        "src/main.cpp",
+        "src/moving.cpp"
     }
 }

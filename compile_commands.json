@@ -11,11 +11,6 @@
 },
 {
   "directory": "/home/sjaak/coding/pet sim x macro",
-  "arguments": ["/usr/bin/g++", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Iinclude", "-I/usr/include/opencv5", "-I", "/home/sjaak/.xmake/packages/n/nlohmann_json/v3.12.0/b36e201b1206419d94ef523b409412cf/include", "-DNDEBUG", "-o", "build/.objs/crimmacro/linux/x86_64/release/src/input.cpp.o", "src/input.cpp"],
-  "file": "src/input.cpp"
-},
-{
-  "directory": "/home/sjaak/coding/pet sim x macro",
   "arguments": ["/usr/bin/g++", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Iinclude", "-I/usr/include/opencv5", "-I", "/home/sjaak/.xmake/packages/n/nlohmann_json/v3.12.0/b36e201b1206419d94ef523b409412cf/include", "-DNDEBUG", "-o", "build/.objs/crimmacro/linux/x86_64/release/src/main.cpp.o", "src/main.cpp"],
   "file": "src/main.cpp"
 },
@@ -23,4 +18,14 @@
   "directory": "/home/sjaak/coding/pet sim x macro",
   "arguments": ["/usr/bin/g++", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Iinclude", "-I/usr/include/opencv5", "-I", "/home/sjaak/.xmake/packages/n/nlohmann_json/v3.12.0/b36e201b1206419d94ef523b409412cf/include", "-DNDEBUG", "-o", "build/.objs/crimmacro/linux/x86_64/release/src/eyes.cpp.o", "src/eyes.cpp"],
   "file": "src/eyes.cpp"
+},
+{
+  "directory": "/home/sjaak/coding/pet sim x macro",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Iinclude", "-I/usr/include/opencv5", "-I", "/home/sjaak/.xmake/packages/n/nlohmann_json/v3.12.0/b36e201b1206419d94ef523b409412cf/include", "-DNDEBUG", "-o", "build/.objs/crimmacro/linux/x86_64/release/src/input.cpp.o", "src/input.cpp"],
+  "file": "src/input.cpp"
+},
+{
+  "directory": "/home/sjaak/coding/pet sim x macro",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-Iinclude", "-I/usr/include/opencv5", "-I", "/home/sjaak/.xmake/packages/n/nlohmann_json/v3.12.0/b36e201b1206419d94ef523b409412cf/include", "-DNDEBUG", "-o", "build/.objs/crimmacro/linux/x86_64/release/src/moving.cpp.o", "src/moving.cpp"],
+  "file": "src/moving.cpp"
 }]

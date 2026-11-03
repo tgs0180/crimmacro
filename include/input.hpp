@@ -16,7 +16,7 @@ class VirtualInput {
         void click();
         void clickAt(int x, int y);
         std::atomic<bool> shouldStop{false};
-
+        void scroll(int amount);
 
     private:
         Fd fd_;

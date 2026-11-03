@@ -13,6 +13,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include "eyes.hpp"
+#include "moving.hpp"
+#include <vector>
 #include "opencv2/core/types.hpp"
 #include <opencv2/imgproc.hpp>
 
@@ -22,8 +24,22 @@ enum class State{Paused, Working, Quitting};
 
 constexpr double failedTextThreshold = 0.5;
 
+// * only used by the F7/F8 teleport test
+struct TeleportTest {
+    const char* name;
+    cv::Mat tmpl;
+};
+
 int main() {
     cv::Mat failedText = cv::imread("templates/failed_text.png", cv::IMREAD_COLOR);
+
+    std::vector<TeleportTest> islands = {
+        {"Haunted Island", cv::imread("templates/tp_haunted_island.png", cv::IMREAD_COLOR)},
+        {"Hell Island", cv::imread("templates/tp_hell_island.png", cv::IMREAD_COLOR)},
+        {"Heaven Island", cv::imread("templates/tp_heaven_island.png", cv::IMREAD_COLOR)},
+        {"Heaven's Gate", cv::imread("templates/tp_heavens_gate.png", cv::IMREAD_COLOR)},
+    };
+    size_t nextIsland = 0;
 
     VirtualInput input;
 
@@ -31,7 +47,9 @@ int main() {
 
     std::atomic<State> state{State::Paused};
     std::atomic<bool> screenshotRequested{false};
-    std::thread thread(listenHotkeys, [&state, &input, &screenshotRequested](int code) {
+    std::atomic<bool> teleportRequested{false};
+    std::atomic<bool> wrongTeleportRequested{false};
+    std::thread thread(listenHotkeys, [&state, &input, &screenshotRequested, &teleportRequested, &wrongTeleportRequested](int code) {
         if (code == KEY_F1) {state = State::Working; input.shouldStop = false; return true;}
         else if (code == KEY_F2) {state = State::Paused; input.shouldStop = true; return true;}
         else if (code == KEY_F3) {state = State::Quitting; input.shouldStop = true; return false;}
@@ -39,6 +57,8 @@ int main() {
             screenshotRequested = true;
             return true;
         }
+        else if (code == KEY_F7) {teleportRequested = true; return true;}
+        else if (code == KEY_F8) {wrongTeleportRequested = true; return true;}
         else return true;});
 
 
@@ -112,6 +132,26 @@ int main() {
                     cv::rectangle(img, m.box, cv::Scalar(255, 0, 0), 2);
                 }
                 cv::imwrite("debug_boxes.png", img);
+            }
+        }
+
+        // * teleport test: F7 goes to the next island, F8 searches for something that isn't in the popup
+        bool realTest = teleportRequested.exchange(false);
+        bool wrongTest = wrongTeleportRequested.exchange(false);
+        if (realTest || wrongTest) {
+            auto win = parser();
+            if (state != State::Paused) std::cout << "teleport test only runs while paused" << "\n";
+            else if (!win) std::cout << "Sober is not opened" << "\n";
+            else {
+                const char* name = wrongTest ? "wrong template" : islands[nextIsland].name;
+                const cv::Mat& tmpl = wrongTest ? failedText : islands[nextIsland].tmpl;
+                if (!wrongTest) nextIsland = (nextIsland + 1) % islands.size();
+
+                std::cout << "teleport test: " << name << "\n";
+                focusSober();
+                input.shouldStop = false; // F2 leaves this on, and it would make teleportTo quit right away
+                bool result = teleportTo(tmpl, input, *win);
+                std::cout << "teleportTo returned " << (result ? "true" : "false") << "\n";
             }
         }
 
