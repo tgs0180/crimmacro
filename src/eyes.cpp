@@ -11,15 +11,14 @@ cv::Mat look() {
     if (!win) return cv::Mat();
     std::string command = std::string("grim -g ") + std::string(R"(")") + std::to_string(win->x) + "," + std::to_string(win->y) + " " + std::to_string(win->width) + "x" + std::to_string(win->height) + R"(")" + " -t ppm -";
     FILE* pipe = popen(command.c_str(), "r");
-    if (pipe == nullptr) {return cv::Mat();}
+    if (pipe == nullptr) { pclose(pipe); return cv::Mat();}
     
     std::vector<unsigned char> bytes;
     unsigned char buf[65536];
     while (true) {
         size_t n = fread(buf, 1, sizeof buf, pipe);
         if (n > 0) bytes.insert(bytes.end(), buf, buf + n);
-        else if (n == 0) break;
-        else if (n < 0) {pclose(pipe); return cv::Mat();}
+        else break;
     }
 
     cv::Mat img = cv::imdecode(bytes, cv::IMREAD_COLOR);
@@ -50,7 +49,6 @@ std::optional<cv::Rect> findButton(const cv::Mat& screen, cv::Scalar lower, cv::
     cv::Mat mask;
     cv::inRange(screen, lower, upper, mask);
     cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, cv::getStructuringElement(cv::MORPH_RECT, {9, 9}));
-    cv::imwrite("mask.png", mask);
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
     for (const auto& x : contours) {

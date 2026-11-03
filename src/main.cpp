@@ -20,14 +20,9 @@ using namespace std::chrono_literals; // Enables the 'ms' suffix
 
 enum class State{Paused, Working, Quitting};
 
-struct fract {
-    float x{};
-    float y{};
-};
+constexpr double failedTextThreshold = 0.5;
 
 int main() {
-    cv::Mat turnOn = cv::imread("templates/turn_on.png", cv::IMREAD_COLOR);
-    cv::Mat turnOff = cv::imread("templates/turn_off.png", cv::IMREAD_COLOR);
     cv::Mat failedText = cv::imread("templates/failed_text.png", cv::IMREAD_COLOR);
 
     VirtualInput input;
@@ -35,16 +30,14 @@ int main() {
     if (!input.valid()) std::cout << "input isnt vaid" << "\n";
 
     std::atomic<State> state{State::Paused};
-    std::atomic<bool> pickRequested{false};
     std::atomic<bool> screenshotRequested{false};
-    std::thread thread(listenHotkeys, [&state, &input, &pickRequested, &screenshotRequested](int code) {
+    std::thread thread(listenHotkeys, [&state, &input, &screenshotRequested](int code) {
         if (code == KEY_F1) {state = State::Working; input.shouldStop = false; return true;}
         else if (code == KEY_F2) {state = State::Paused; input.shouldStop = true; return true;}
         else if (code == KEY_F3) {state = State::Quitting; input.shouldStop = true; return false;}
-        else if (code == KEY_F5) {pickRequested = true; return true;}
         else if (code == KEY_F6) {
             screenshotRequested = true;
-            return true;  
+            return true;
         }
         else return true;});
 
@@ -56,67 +49,69 @@ int main() {
     else std::cout << "Sober is not opened" << "\n";
     if (!focusSober()) std::cout << "failed to focus sober" << "\n";
 
-    std::optional<fract> autohatchPos;
-    bool autohatchClicked{false};
     std::chrono::steady_clock::time_point lastAfk = std::chrono::steady_clock::now() - 6min;
+    std::chrono::steady_clock::time_point lastClick;
     while (state != State::Quitting) {
         if (state == State::Working) {
             focusSober();
             std::cout << "working..." << "\n";
-            if (!autohatchPos.has_value()) {
-                std::cout << "Press F5 to save button position" << "\n";
-            }
-            else {
-                auto win = parser();
-                if (win) {
-                    auto clickposx = autohatchPos->x * win->width + win->x;
-                    auto clickposy = autohatchPos->y * win->height + win->y;
-                    if (!autohatchClicked) {input.clickAt(clickposx, clickposy); autohatchClicked = true;}
-                }
-            }
 
             if (std::chrono::steady_clock::now() - lastAfk >= 5min) {
                 input.tap(KEY_P);
                 lastAfk = std::chrono::steady_clock::now();
             }
-        }
 
-        if (pickRequested.exchange(false)) {
-            auto cursor = cursorPos();
-            auto win = parser();
-            if (win && cursor) {
-                float relX = (cursor->x - win->x) / float(win->width);
-                float relY = (cursor->y - win->y) / float(win->height);
-                std::cout << relX << "\n" << relY << "\n";
-                autohatchPos = fract{relX, relY};
+            // ! the actual working logic
+            cv::Mat img = look();
+            if (!img.empty()) {
+                auto turnOn_ = findButton(img, cv::Scalar(30, 200, 30), cv::Scalar(90, 255, 90));
+                auto turnOff_ = findButton(img, cv::Scalar(0,0,200), cv::Scalar(90,90,255));
+                auto failedText_ = bestMatch(img, failedText);
+                if (failedText_.score > failedTextThreshold) {
+                    state = State::Paused;
+                    std::cout << "Autohatch failed!" << "\n";
+                }
+                else if (turnOn_) {
+                    auto win = parser();
+                    if (win && std::chrono::steady_clock::now() - lastClick >= 2s) {
+                        int cx = turnOn_->x + turnOn_->width / 2;
+                        int cy = turnOn_->y + turnOn_->height / 2;
+                        input.clickAt(cx + win->x, cy + win->y);
+                        std::cout << "Turned autohatch on" << "\n";
+                        lastClick = std::chrono::steady_clock::now();
+                    }
+                }
+                else if (turnOff_) {
+                    // * do nothing
+                }
+                else std::cout << "Couldnt find anything" << "\n";
             }
         }
+
 
         if (screenshotRequested.exchange(false)) {
             cv::Mat img = look();
             if (!img.empty()) {
-                cv::imwrite("debug.png", img);
+                cv::imwrite("debug.png", img); // stays clean, so templates can be cropped from it
                 std::cout << "TOOK SCREENSHOT" << "\n";
-            }
-            if (!turnOn.empty() || !turnOff.empty()) {
+
                 auto r = findButton(img, cv::Scalar(0,0,200), cv::Scalar(90,90,255));
                 auto rr = findButton(img, cv::Scalar(30, 200, 30), cv::Scalar(90, 255, 90));
                 auto m = bestMatch(img, failedText);
+                std::cout << "failed text score: " << m.score << "\n";
                 if (rr) {
                     std::cout << "turn on detected" << "\n";
                     cv::rectangle(img, *rr, cv::Scalar(0, 0, 255), 2);
-                    cv::imwrite("debug.png", img);
                 }
                 else if (r) {
                     std::cout << "turn off detected" << "\n";
                     cv::rectangle(img, *r, cv::Scalar(0,255,0), 2);
-                    cv::imwrite("debug.png", img);
                 }
-                if (m.score > 0.5) {
+                if (m.score > failedTextThreshold) {
                     std::cout << "failed text detected" << "\n";
                     cv::rectangle(img, m.box, cv::Scalar(255, 0, 0), 2);
-                    cv::imwrite("debug.png", img);
-                } 
+                }
+                cv::imwrite("debug_boxes.png", img);
             }
         }
 
