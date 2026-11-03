@@ -28,7 +28,8 @@ struct fract {
 int main() {
     cv::Mat turnOn = cv::imread("templates/turn_on.png", cv::IMREAD_COLOR);
     cv::Mat turnOff = cv::imread("templates/turn_off.png", cv::IMREAD_COLOR);
-    
+    cv::Mat failedText = cv::imread("templates/failed_text.png", cv::IMREAD_COLOR);
+
     VirtualInput input;
 
     if (!input.valid()) std::cout << "input isnt vaid" << "\n";
@@ -100,16 +101,22 @@ int main() {
             if (!turnOn.empty() || !turnOff.empty()) {
                 auto r = findButton(img, cv::Scalar(0,0,200), cv::Scalar(90,90,255));
                 auto rr = findButton(img, cv::Scalar(30, 200, 30), cv::Scalar(90, 255, 90));
-                if (r) {
-                    std::cout << "turn off detected" << "\n";
-                    cv::rectangle(img, *r, cv::Scalar(0,255,0), 2);
-                    cv::imwrite("debug.png", img);
-                }
+                auto m = bestMatch(img, failedText);
                 if (rr) {
                     std::cout << "turn on detected" << "\n";
                     cv::rectangle(img, *rr, cv::Scalar(0, 0, 255), 2);
                     cv::imwrite("debug.png", img);
                 }
+                else if (r) {
+                    std::cout << "turn off detected" << "\n";
+                    cv::rectangle(img, *r, cv::Scalar(0,255,0), 2);
+                    cv::imwrite("debug.png", img);
+                }
+                if (m.score > 0.5) {
+                    std::cout << "failed text detected" << "\n";
+                    cv::rectangle(img, m.box, cv::Scalar(255, 0, 0), 2);
+                    cv::imwrite("debug.png", img);
+                } 
             }
         }
 
