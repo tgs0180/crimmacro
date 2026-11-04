@@ -43,7 +43,9 @@ int main() {
 
     VirtualInput input;
 
-    if (!input.valid()) std::cout << "input isnt vaid" << "\n";
+    if (!input.valid()) std::cout << "input isnt valid" << "\n";
+
+    joinGame(input);
 
     std::atomic<State> state{State::Paused};
     std::atomic<bool> screenshotRequested{false};

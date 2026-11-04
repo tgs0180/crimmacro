@@ -5,4 +5,6 @@
 
 bool teleportTo(const cv::Mat& tmpl, VirtualInput& input, parseresult win);
 
-bool runRoute();
+bool goToEmpyreanEgg(VirtualInput& input);
+
+bool joinGame(VirtualInput& input);

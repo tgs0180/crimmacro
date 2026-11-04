@@ -1,5 +1,6 @@
 {
     files = {
+        "build/.objs/crimmacro/linux/x86_64/release/src/camera.cpp.o",
         "build/.objs/crimmacro/linux/x86_64/release/src/eyes.cpp.o",
         "build/.objs/crimmacro/linux/x86_64/release/src/hotkeys.cpp.o",
         "build/.objs/crimmacro/linux/x86_64/release/src/hyprland.cpp.o",
