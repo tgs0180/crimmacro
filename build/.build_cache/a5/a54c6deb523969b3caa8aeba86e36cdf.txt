@@ -1,7 +1,0 @@
-{
-    errdata = "src/main.cpp:27:58: warning: multi-character literal with 54 characters exceeds ‘int’ size of 4 bytes\
-   27 |     std::string reply = hyprcommand(\"hyprctl dispatch\" + 'hl.dsp.focus({ window = \"class:org.vinegarhq.Sober\" })');\
-      |                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
-cc1plus: note: unrecognized command-line option ‘-Wno-gnu-line-marker’ may have been intended to silence earlier diagnostics\
-"
-}

@@ -1,9 +1,0 @@
-{
-    errdata = "src/moving.cpp: In function ‘bool goToEmpyreanEgg(VirtualInput&)’:\
-src/moving.cpp:86:1: warning: no return statement in function returning non-void [-Wreturn-type]\
-   86 | }\
-      | ^\
-At global scope:\
-cc1plus: note: unrecognized command-line option ‘-Wno-gnu-line-marker’ may have been intended to silence earlier diagnostics\
-"
-}
