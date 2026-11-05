@@ -1,0 +1,9 @@
+build/
+.xmake/
+debug.png
+debug_boxes.png
+mask.png
+x.png
+.cache/
+.vscode/
+compile_commands.json

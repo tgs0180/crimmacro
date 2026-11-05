@@ -8,6 +8,9 @@
 #include <nlohmann/json.hpp>
 #include <utility>
 
+// Window class of the Roblox client (Quadra), from its quadrahq-roblox-window.desktop file
+static const std::string gameClass = "com.roblox.RobloxPlayer";
+
 std::string hyprcommand(std::string command) {
     const char* runtime = std::getenv("XDG_RUNTIME_DIR");
     const char* sign = std::getenv("HYPRLAND_INSTANCE_SIGNATURE");
@@ -43,7 +46,7 @@ std::optional<parseresult> parser() {
     if (command == "") return std::nullopt;
     auto j = nlohmann::json::parse(command);
     for (auto& w : j) {
-        if (w["class"] == "org.vinegarhq.Sober") {
+        if (w["class"] == gameClass) {
             x.x = w["at"][0];
             x.y = w["at"][1];
             x.width = w["size"][0];
@@ -55,9 +58,14 @@ std::optional<parseresult> parser() {
 }
 
 bool focusSober() {
-    std::string reply = hyprcommand(R"(dispatch hl.dsp.focus({ window = "class:org.vinegarhq.Sober" }))");
+    std::string reply = hyprcommand(R"(dispatch hl.dsp.focus({ window = "class:)" + gameClass + R"(" }))");
     if (reply == "ok") return true;
     else return false;
+}
+
+bool closeGame() {
+    std::string reply = hyprcommand(R"(dispatch hl.dsp.window.close({ window = "class:)" + gameClass + R"(" }))");
+    return reply == "ok";
 }
 
 std::optional<cursorParse> cursorPos() {

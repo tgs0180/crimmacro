@@ -46,7 +46,7 @@ bool teleportTo(const cv::Mat& tmpl, VirtualInput& input, parseresult win) {
             return true;
         }
         else {
-            input.scroll(-3);
+            input.scroll(-6);
             std::this_thread::sleep_for(250ms);
         }
         if (std::chrono::steady_clock::now() - timeout >= 4s) break;
@@ -65,23 +65,46 @@ static bool waitUntil(VirtualInput& input, std::function<bool()> done, std::chro
     return false;
 }
 
-bool joinGame(VirtualInput& input, Camera& camera) {
+static bool joinOnce(VirtualInput& input) {
     if (parser()) {
-        std::system("flatpak kill org.vinegarhq.Sober >/dev/null 2>&1");
+        closeGame();
         if (!waitUntil(input, [] { return !parser(); }, 30s)) return false;
     }
 
-    int open = std::system(R"(xdg-open "roblox://placeId=85920622393590" >/dev/null 2>&1 &)");
-    if (open != 0) return false;
-    if (!waitUntil(input, [] { return parser().has_value(); }, 60s)) return false;
+    const char* launch =
+    "cd ~/.local/share/quadrahq/rosemary/prefix/root && "
+    "ROSEMARY_PREFIX=$HOME/.local/share/quadrahq/rosemary/prefix "
+    "~/.local/share/quadrahq/rosemary-runner/0.5.0-quadra.1/squashfs-root/bin/rosemary run "
+    "~/.local/share/quadrahq/rosemary/versions/version-*/Roblox.app "
+    "-protocolString \"roblox://placeId=85920622393590\" >/dev/null 2>&1 &";
 
+    int open = std::system(launch);
+
+    if (open != 0) return false;
+    if (!waitUntil(input, [] { return parser().has_value(); }, 60s)) return  false;
+
+    auto errorTmpl = cv::imread("templates/error_ok.png", cv::IMREAD_COLOR);
     auto tpTmpl = cv::imread("templates/tp_remote.png", cv::IMREAD_COLOR);
     if (tpTmpl.empty()) return false;
-    bool loaded = waitUntil(input, [&tpTmpl] { return bestMatch(look(), tpTmpl).score > 0.8; }, 120s);
+    bool loaded = waitUntil(input, [&tpTmpl, &errorTmpl] { return bestMatch(look(), tpTmpl).score > 0.8; }, 120s);
     if (!loaded) return false;
-
-    camera.cameraPos = 0; // a fresh join puts the real camera back at its starting view
     return true;
+}
+
+bool joinGame(VirtualInput& input, Camera& camera) {
+    bool succeed = joinOnce(input);
+    int max_tries{5};
+
+    while (!succeed && max_tries != 0) {
+        std::cout << "Trying to rejoin (attempt: " << 6 - max_tries << ")" << "\n";
+        std::this_thread::sleep_for(3s);
+        if (input.shouldStop) return false;
+        succeed = joinOnce(input);
+        max_tries -= 1;
+    }
+    if (!succeed) return false;
+    camera.cameraPos = 0; // a fresh join puts the real camera back at its starting view
+    return succeed;
 }
 
 
@@ -104,7 +127,7 @@ bool goToEmpyreanEgg(VirtualInput& input, Camera& camera) {
     auto scr = look();
     auto hatch = findButton(scr, cv::Scalar(30, 200, 30), cv::Scalar(90, 255, 90));
     input.moveTo(200, 500);
-    if (!hatch) std::cout << "couldnt find the autohatch button" << "\n";
+    if (!hatch) {std::cout << "couldnt find the autohatch button" << "\n"; return false;}
     input.clickAt(hatch->x + hatch->width / 2 + win->x, hatch->y + hatch->height / 2 + win->y);
     return true;
 }
