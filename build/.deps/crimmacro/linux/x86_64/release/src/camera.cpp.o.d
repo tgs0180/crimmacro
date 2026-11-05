@@ -1,8 +1,8 @@
 {
+    depfiles_format = "gcc",
     files = {
         "src/camera.cpp"
     },
-    depfiles_format = "gcc",
     values = {
         "/usr/bin/g++",
         {

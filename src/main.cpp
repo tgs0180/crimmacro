@@ -24,7 +24,7 @@ enum class State{Paused, Working, Quitting};
 
 constexpr double failedTextThreshold = 0.5;
 
-// * only used by the F7/F8 teleport test
+// * only used by the F9/F8 teleport test
 struct TeleportTest {
     const char* name;
     cv::Mat tmpl;
@@ -45,13 +45,14 @@ int main() {
 
     if (!input.valid()) std::cout << "input isnt valid" << "\n";
 
-    joinGame(input);
+    Camera camera;
 
     std::atomic<State> state{State::Paused};
     std::atomic<bool> screenshotRequested{false};
     std::atomic<bool> teleportRequested{false};
     std::atomic<bool> wrongTeleportRequested{false};
-    std::thread thread(listenHotkeys, [&state, &input, &screenshotRequested, &teleportRequested, &wrongTeleportRequested](int code) {
+    std::atomic<bool> eggRequested{false};
+    std::thread thread(listenHotkeys, [&state, &input, &screenshotRequested, &teleportRequested, &wrongTeleportRequested, &eggRequested](int code) {
         if (code == KEY_F1) {state = State::Working; input.shouldStop = false; return true;}
         else if (code == KEY_F2) {state = State::Paused; input.shouldStop = true; return true;}
         else if (code == KEY_F3) {state = State::Quitting; input.shouldStop = true; return false;}
@@ -59,10 +60,13 @@ int main() {
             screenshotRequested = true;
             return true;
         }
-        else if (code == KEY_F7) {teleportRequested = true; return true;}
+        else if (code == KEY_F7) {eggRequested = true; return true;}
+        else if (code == KEY_F9) {teleportRequested = true; return true;}
         else if (code == KEY_F8) {wrongTeleportRequested = true; return true;}
         else return true;});
 
+    // after the hotkey thread, so F2 and F3 work while the game loads
+    if (!joinGame(input, camera)) std::cout << "failed to join the game" << "\n";
 
     if (auto win = parser()) {
         std::cout << win->x << "\n" << win->y << "\n";
@@ -73,6 +77,7 @@ int main() {
 
     std::chrono::steady_clock::time_point lastAfk = std::chrono::steady_clock::now() - 6min;
     std::chrono::steady_clock::time_point lastClick;
+    bool once{false};
     while (state != State::Quitting) {
         if (state == State::Working) {
             focusSober();
@@ -137,7 +142,17 @@ int main() {
             }
         }
 
-        // * teleport test: F7 goes to the next island, F8 searches for something that isn't in the popup
+        if (eggRequested.exchange(false)) {
+            if (state != State::Paused) std::cout << "egg walk only runs while paused" << "\n";
+            else {
+                focusSober();
+                input.shouldStop = false; // F2 leaves this on, and it would make the walk quit right away
+                bool result = goToEmpyreanEgg(input, camera);
+                std::cout << "goToEmpyreanEgg returned " << (result ? "true" : "false") << "\n";
+            }
+        }
+
+        // * teleport test: F9 goes to the next island, F8 searches for something that isn't in the popup
         bool realTest = teleportRequested.exchange(false);
         bool wrongTest = wrongTeleportRequested.exchange(false);
         if (realTest || wrongTest) {
