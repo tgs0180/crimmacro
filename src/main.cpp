@@ -81,6 +81,7 @@ int main() {
     while (state != State::Quitting) {
         if (state == State::Working) {
             focusSober();
+            std::this_thread::sleep_for(500ms);
             std::cout << "working..." << "\n";
 
             if (std::chrono::steady_clock::now() - lastAfk >= 5min) {
@@ -146,6 +147,7 @@ int main() {
             if (state != State::Paused) std::cout << "egg walk only runs while paused" << "\n";
             else {
                 focusSober();
+                std::this_thread::sleep_for(500ms);
                 input.shouldStop = false; // F2 leaves this on, and it would make the walk quit right away
                 bool result = goToEmpyreanEgg(input, camera);
                 std::cout << "goToEmpyreanEgg returned " << (result ? "true" : "false") << "\n";
@@ -166,6 +168,7 @@ int main() {
 
                 std::cout << "teleport test: " << name << "\n";
                 focusSober();
+                std::this_thread::sleep_for(500ms);
                 input.shouldStop = false; // F2 leaves this on, and it would make teleportTo quit right away
                 bool result = teleportTo(tmpl, input, *win);
                 std::cout << "teleportTo returned " << (result ? "true" : "false") << "\n";

@@ -20,7 +20,7 @@ cv::Mat look() {
         if (n > 0) bytes.insert(bytes.end(), buf, buf + n);
         else break;
     }
-    if (bytes.empty()) {return cv::Mat(); pclose(pipe);}
+    if (bytes.empty()) {pclose(pipe); return cv::Mat();}
 
     cv::Mat img = cv::imdecode(bytes, cv::IMREAD_COLOR);
     pclose(pipe);
